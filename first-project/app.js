@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.use('/name/:id', service.getNameById);
-
 app.listen(port, () => {
     console.log(`App running on port ${port}`)
 });
