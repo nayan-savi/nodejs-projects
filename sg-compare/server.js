@@ -9,15 +9,19 @@ var xlsx = require('xlsx')
 
 const DIR = './uploads';
 
-// let storage = multer.diskStorage({
-//      destination: (req, file, cb) => {
-//         cb(null, DIR);
-//      },
+let storage = multer.diskStorage({
+     destination: (req, file, cb) => {
+        cb(null, DIR);
+     },
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname+ path.extname(file.originalname));
+    }
+});
+// let storage = multer.memoryStorage({
 //     filename: (req, file, cb) => {
-//       cb(null, file.fieldname);
+//         cb(null, file.fieldname + '.' + path.extname(file.originalname));
 //     }
 // });
-let storage = multer.memoryStorage();
 let upload = multer({ storage: storage });
 
 app.use(bodyParser.json());
@@ -43,16 +47,12 @@ app.post('/api/upload', upload.single('fileupload'), function (req, res) {
         });
     } else {
         console.log('file received');
-        let buffer = req.file.buffer
-        console.log(req.file.buffer)
-        fs.readFile(buffer, 'utf8', function(err, contents) {
-            console.log(contents);
-        });
+        let workbook = xlsx.readFile(DIR+"/"+req.file.filename)
         let sheet_name_list = workbook.SheetNames;
         var xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
         console.log(xlData);
-
-        return res.send({ success: true })
+        console.log(Object.keys(xlData[0]))
+        return res.send(xlData)
     }
 });
 
