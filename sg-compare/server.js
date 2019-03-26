@@ -10,6 +10,9 @@ const utility = require('./utility')
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => {
+        if (!fs.existsSync(utility.DIR)) {
+            fs.mkdirSync(utility.DIR);
+        }
         cb(null, utility.DIR);
     },
     filename: (req, file, cb) => {
