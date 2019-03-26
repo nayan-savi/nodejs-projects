@@ -35,24 +35,29 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/api', function (req, res) {
-    res.end('file catcher example');
-});
-
-app.post('/api/upload', upload.single('fileupload'), function (req, res) {
+app.post('/api/src', upload.single('source'), function (req, res) {
     if (!req.file) {
-        console.log("No file received");
-        return res.send({
-            success: false
-        });
+        console.log("No file received src");
+        return res.send({ success: false });
     } else {
-        console.log('file received');
+        console.log('file received src');
         let workbook = xlsx.readFile(DIR+"/"+req.file.filename)
         let sheet_name_list = workbook.SheetNames;
-        var xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-        console.log(xlData);
-        console.log(Object.keys(xlData[0]))
-        return res.send(xlData)
+        var result = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        return res.send(result[0])
+    }
+});
+
+app.post('/api/dest', upload.single('destination'), function (req, res) {
+    if (!req.file) {
+        console.log("No file received dest");
+        return res.send({ success: false });
+    } else {
+        console.log('file received dest');
+        let workbook = xlsx.readFile(DIR+"/"+req.file.filename)
+        let sheet_name_list = workbook.SheetNames;
+        var result = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        return res.send(result[0])
     }
 });
 
