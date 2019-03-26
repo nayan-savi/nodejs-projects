@@ -43,7 +43,7 @@ app.post('/api/src', upload.single('source'), function (req, res) {
         return res.send({ success: false });
     } else {
         console.log('file received src');
-        let result = utility.getExcelData(req);
+        let result = utility.getSrcDestDropdownData(req);
         return res.send(result)
     }
 });
@@ -54,7 +54,7 @@ app.post('/api/dest', upload.single('destination'), function (req, res) {
         return res.send({ success: false });
     } else {
         console.log('file received dest');
-        let result = utility.getExcelData(req);
+        let result = utility.getSrcDestDropdownData(req);
         return res.send(result)
     }
 });
