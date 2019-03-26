@@ -5,13 +5,12 @@ const multer = require('multer');
 const bodyParser = require('body-parser')
 const app = express();
 const router = express.Router();
-var xlsx = require('xlsx')
 
-const DIR = './uploads';
+const utility = require('./utility')
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, DIR);
+        cb(null, utility.DIR);
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + path.extname(file.originalname));
@@ -41,10 +40,8 @@ app.post('/api/src', upload.single('source'), function (req, res) {
         return res.send({ success: false });
     } else {
         console.log('file received src');
-        let workbook = xlsx.readFile(DIR + "/" + req.file.filename)
-        let sheet_name_list = workbook.SheetNames;
-        var result = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-        return res.send(result[0])
+        let result = utility.getExcelData(req);
+        return res.send(result)
     }
 });
 
@@ -54,10 +51,8 @@ app.post('/api/dest', upload.single('destination'), function (req, res) {
         return res.send({ success: false });
     } else {
         console.log('file received dest');
-        let workbook = xlsx.readFile(DIR + "/" + req.file.filename)
-        let sheet_name_list = workbook.SheetNames;
-        var result = xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-        return res.send(result[0])
+        let result = utility.getExcelData(req);
+        return res.send(result)
     }
 });
 
