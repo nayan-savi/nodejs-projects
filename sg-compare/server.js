@@ -56,9 +56,9 @@ app.post('/api/dest', upload.single('destination'), function (req, res) {
     }
 });
 
-app.post('/api/generate', function(req, res){
-    console.log(req.body);
-    return res.status(200).json(req.body);
+app.post('/api/generate', function (req, res) {
+    let output = utility.getComputeReport(req.body)
+    return res.status(200).send(JSON.stringify(output));
 });
 
 const PORT = process.env.PORT || 3000;
